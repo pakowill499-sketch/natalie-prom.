@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natalie - Prom?</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffe4ec, #ffb3d1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 35px 20px 60px;
+    position: relative;
+    z-index: 2;
+}
+
+h1 {
+    color: #d5006e;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    margin: 0 0 25px;
+    text-shadow: 2px 2px 5px #ffc1d6;
+}
+
+.photo {
+    display: block;
+    width: min(100%, 430px);
+    height: auto;
+    margin: 0 auto 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(213, 0, 110, 0.3);
+}
+
+.buttons {
+    position: relative;
+    height: 150px;
+    width: 100%;
+}
+
+button {
+    font-size: 1.4rem;
+    padding: 15px 35px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#yes {
+    background: #ff1744;
+    color: white;
+    border: none;
+    margin-right: 15px;
+    box-shadow: 0 5px 15px rgba(213, 0, 110, 0.3);
+}
+
+#yes:hover {
+    transform: scale(1.1);
+    background: #d5006e;
+}
+
+#no {
+    background: #ffb3d1;
+    color: #d5006e;
+    border: 2px solid #ff1744;
+    position: absolute;
+    left: 55%;
+    top: 0;
+}
+
+#message {
+    display: none;
+    color: #d5006e;
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    font-weight: bold;
+    animation: pop 0.5s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.heart {
+    position: fixed;
+    bottom: -30px;
+    font-size: 22px;
+    pointer-events: none;
+    animation: floatUp linear forwards;
+    z-index: 1;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(.5);
+        opacity: 0;
+    }
+    20% { opacity: 1; }
+    100% {
+        transform: translateY(-110vh) scale(1.2);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Natalie, will you go to prom with me? 💖</h1>
+
+    <img
+        class="photo"
+        src="natalie.jpeg"
+        alt="Natalie"
+    >
+
+    <!-- Music attempts to autoplay. Browsers may block sound until interaction. -->
+    <audio id="music" autoplay loop>
+        <source src="take-care-of-your-heart.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="buttons">
+        <button id="yes" onclick="sayYes()">YES!!! 💖</button>
+        <button id="no" onmouseover="runAway()">no...</button>
+    </div>
+
+    <div id="message">
+        YIPPEE!!! 🥺❤️
+        <br><br>
+        You just made me the happiest person ever!
+        <br>
+        Can't wait for prom with you! 💕
+    </div>
+
+</div>
+
+<script>
+const music = document.getElementById("music");
+
+/* Try to start music immediately. */
+window.addEventListener("load", () => {
+    music.play().catch(() => {
+        // Browser blocked autoplay. The first interaction will start it.
+    });
+});
+
+/* Fallback for browsers that block autoplay with sound. */
+function startMusic() {
+    if (music.paused) {
+        music.play().catch(() => {});
+    }
+}
+
+["click", "pointerdown", "keydown", "touchstart"].forEach(event => {
+    document.addEventListener(event, startMusic, { once: true });
+});
+
+/* YES button */
+function sayYes() {
+    document.getElementById("message").style.display = "block";
+    startMusic();
+}
+
+/* NO button runs away */
+function runAway() {
+    const button = document.getElementById("no");
+    const area = document.querySelector(".buttons");
+
+    const maxX = Math.max(0, area.clientWidth - button.offsetWidth);
+    const maxY = Math.max(0, area.clientHeight - button.offsetHeight);
+
+    button.style.left = Math.random() * maxX + "px";
+    button.style.top = Math.random() * maxY + "px";
+}
+
+/* Floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 7000);
+}
+
+setInterval(createHeart, 500);
+</script>
+
+</body>
+</html>
